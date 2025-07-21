@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: habit-service
+  namespace: tasktracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: habit-service
+  template:
+    metadata:
+      labels:
+        app: habit-service
+    spec:
+      initContainers:
+        - name: wait-for-eureka
+          image: curlimages/curl:latest
+          command:
+            - sh
+            - -c
+            - 'until curl -s http://eureka-server:8761/eureka/apps > /dev/null; do echo "Waiting for Eureka Server..."; sleep 5; done'
+      containers:
+        - name: api-gateway
+          imagePullPolicy: Always
+          image: ghcr.io/fl1s/tasktracker/habit-service:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+      imagePullSecrets:
+        - name: ghcr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: habit-service
+  namespace: tasktracker
+spec:
+  selector:
+    app: habit-service
+  ports:
+    - port: 8081
+      targetPort: 8081
+  type: NodePort

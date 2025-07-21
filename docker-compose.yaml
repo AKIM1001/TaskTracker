@@ -1,0 +1,205 @@
+services:
+  eureka-server:
+    image: ghcr.io/fl1s/fablewhirl/eureka-server:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - "fablewhirl-network"
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - api-gateway/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  ai-recommendation-service:
+    build:
+      context: ./ai-recommendation-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - ai-recommendation-service/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - user-service/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  analitics-service:
+    build:
+      context: ./analitics-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - analitics-service/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - config-server/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  habit-service:
+    build:
+      context: ./habit-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - habit-service/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - notification-service/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  prime-service:
+    build:
+      context: ./prime-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    env_file:
+      - prime-service/.env.prod
+    depends_on:
+      - eureka-server
+    networks:
+      - "tasktracker-network"
+
+  kafka:
+    container_name: kafka
+    image: bitnami/kafka:latest
+    restart: on-failure
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
+      KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
+      KAFKA_RESTART_ATTEMPTS: "10"
+      KAFKA_RESTART_DELAY: "5"
+      ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
+    depends_on:
+      - zookeeper
+
+
+
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_LISTENER_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  postgres:
+    image: postgres:latest
+    container_name: user-info
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=users
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+      - redis_data:/data/cache
+    ports:
+      - "6379:6379"
+    command: [ "redis-server"]
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SECURITY_ADMIN_PASSWORD: "secret"
+    networks:
+      - monitoring
+
+volumes:
+  kafka_data:
+    driver: local
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  teasktracker-network:
+    driver: bridge
+  monitoring:
+    driver: bridge

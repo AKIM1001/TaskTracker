@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="auth-service" target="17" />
+      <module name="auth-service.main" target="17" />
+      <module name="auth-service.test" target="17" />
+      <module name="habbit-service" target="17" />
+      <module name="habbit-service.main" target="17" />
+      <module name="habbit-service.test" target="17" />
+      <module name="habitService" target="17" />
+      <module name="habitService.main" target="17" />
+      <module name="habitService.test" target="17" />
+      <module name="notifiacation-service" target="17" />
+      <module name="notifiacation-service.main" target="17" />
+      <module name="notifiacation-service.test" target="17" />
+      <module name="service-registry" target="17" />
+      <module name="service-registry.main" target="17" />
+      <module name="service-registry.test" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ai-recommendation-service" options="-parameters" />
+      <module name="ai-recommendation-service.main" options="-parameters" />
+      <module name="ai-recommendation-service.test" options="-parameters" />
+      <module name="analitics-service" options="-parameters" />
+      <module name="analitics-service.main" options="-parameters" />
+      <module name="analitics-service.test" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
+      <module name="api-gateway.main" options="-parameters" />
+      <module name="api-gateway.test" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
+      <module name="auth-service.main" options="-parameters" />
+      <module name="auth-service.test" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="config-server.main" options="-parameters" />
+      <module name="config-server.test" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="eureka-server.main" options="-parameters" />
+      <module name="eureka-server.test" options="-parameters" />
+      <module name="habbit-service" options="-parameters" />
+      <module name="habbit-service.main" options="-parameters" />
+      <module name="habbit-service.test" options="-parameters" />
+      <module name="habit-service" options="-parameters" />
+      <module name="habit-service.main" options="-parameters" />
+      <module name="habit-service.test" options="-parameters" />
+      <module name="habitService" options="-parameters" />
+      <module name="habitService.main" options="-parameters" />
+      <module name="habitService.test" options="-parameters" />
+      <module name="notifiacation-service" options="-parameters" />
+      <module name="notifiacation-service.main" options="-parameters" />
+      <module name="notifiacation-service.test" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
+      <module name="notification-service.main" options="-parameters" />
+      <module name="notification-service.test" options="-parameters" />
+      <module name="prime-service" options="-parameters" />
+      <module name="prime-service.main" options="-parameters" />
+      <module name="prime-service.test" options="-parameters" />
+      <module name="service-registry" options="-parameters" />
+      <module name="service-registry.main" options="-parameters" />
+      <module name="service-registry.test" options="-parameters" />
+      <module name="user-service" options="-parameters" />
+      <module name="user-service.main" options="-parameters" />
+      <module name="user-service.test" options="-parameters" />
+    </option>
+  </component>
+</project>
